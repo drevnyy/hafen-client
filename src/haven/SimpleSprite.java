@@ -68,7 +68,7 @@ public class SimpleSprite {
     }
     
     public final Coord ul() {
-	return(cc.inv().add(img.o));
+	return(cc.inv().addValues(img.o));
     }
     
     public final Coord lr() {

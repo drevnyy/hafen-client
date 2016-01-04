@@ -281,7 +281,7 @@ public class UI {
     }
 	
     private Coord wdgxlate(Coord c, Widget wdg) {
-	return(c.add(wdg.c.inv()).add(wdg.parent.rootpos().inv()));
+	return(c.add(wdg.c.inv()).addValues(wdg.parent.rootpos().inv()));
     }
 	
     public boolean dropthing(Widget w, Coord c, Object thing) {

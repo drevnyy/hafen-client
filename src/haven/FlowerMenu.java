@@ -32,6 +32,7 @@ import static java.lang.Math.PI;
 
 public class FlowerMenu extends Widget {
     public static final Color pink = new Color(255, 0, 128);
+    private static final Coord c33 = new Coord(3,3);
     public static final Color ptc = Color.YELLOW;
     public static final Text.Foundry ptf = new Text.Foundry(Text.dfont, 12);
     public static final IBox pbox = Window.wbox;
@@ -71,12 +72,11 @@ public class FlowerMenu extends Widget {
 	public void move(double a, double r) {
 	    move(Coord.sc(a, r));
 	}
-
 	public void draw(GOut g) {
 	    g.chcolor(new Color(255, 255, 255, (int)(255 * a)));
-	    g.image(pbg, new Coord(3, 3), new Coord(3, 3), sz.add(new Coord(-6, -6)));
+	    g.image(pbg, c33, c33, sz.sub(6, 6));
 	    pbox.draw(g, Coord.z, sz);
-	    g.image(text.tex(), sz.div(2).sub(text.sz().div(2)));
+	    g.image(text.tex(), sz.div(2).subValues(text.sz().div(2)));
 	}
 
 	public boolean mousedown(Coord c, int button) {

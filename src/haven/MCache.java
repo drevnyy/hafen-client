@@ -158,7 +158,7 @@ public class MCache {
 		    if(set.flavobjs.size() > 0) {
 			if((fp % set.flavprob) == 0) {
 			    Indir<Resource> r = set.flavobjs.pick(rp % set.flavobjs.tw);
-			    Gob g = new Flavobj(c.add(tc).mul(tilesz).add(tilesz.div(2)), a * 2 * Math.PI);
+			    Gob g = new Flavobj(c.add(tc).mulValues(tilesz).addValues(tilesz.div(2)), a * 2 * Math.PI);
 			    g.setattr(new ResDrawable(g, r, Message.nil));
 			    Coord cc = c.div(cutsz);
 			    fo[cc.x + (cc.y * cutn.x)].add(g);
@@ -423,7 +423,7 @@ public class MCache {
 	Grid g = getgridt(tc);
 	int ol = g.getol(tc.sub(g.ul));
 	for(Overlay lol : ols) {
-	    if(tc.isect(lol.c1, lol.c2.add(lol.c1.inv()).add(new Coord(1, 1))))
+	    if(tc.isect(lol.c1, lol.c2.add(lol.c1.inv()).addValues(1, 1)))
 		ol |= lol.mask;
 	}
 	return(ol);
@@ -576,7 +576,7 @@ public class MCache {
     }
 
     public void reqarea(Coord ul, Coord br) {
-	ul = ul.div(cutsz); br = br.div(cutsz);
+	ul.divValues(cutsz); br.divValues(cutsz);
 	Coord rc = new Coord();
 	for(rc.y = ul.y; rc.y <= br.y; rc.y++) {
 	    for(rc.x = ul.x; rc.x <= br.x; rc.x++) {

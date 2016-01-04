@@ -109,7 +109,7 @@ public class MenuGrid extends Widget {
     }
 	
     public MenuGrid() {
-	super(bgsz.mul(gsz).add(1, 1));
+	super(bgsz.mul(gsz).addValues(1, 1));
     }
 	
     private static Comparator<Pagina> sorter = new Comparator<Pagina>() {
@@ -178,7 +178,7 @@ public class MenuGrid extends Widget {
 	long now = System.currentTimeMillis();
 	for(int y = 0; y < gsz.y; y++) {
 	    for(int x = 0; x < gsz.x; x++) {
-		Coord p = bgsz.mul(new Coord(x, y));
+		Coord p = bgsz.mul(x, y);
 		g.image(bg, p);
 		Pagina btn = layout[x][y];
 		if(btn != null) {
@@ -222,7 +222,7 @@ public class MenuGrid extends Widget {
 	    final Tex dt = dragging.img.tex();
 	    ui.drawafter(new UI.AfterDraw() {
 		    public void draw(GOut g) {
-			g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
+			g.image(dt, ui.mc.add(dt.sz().div(2).invValues()));
 		    }
 		});
 	}

@@ -734,7 +734,8 @@ public class Utils {
     }
     
     public static BufferedImage outline(BufferedImage img, Color col) {
-	Coord sz = imgsz(img).add(2, 2);
+	Coord sz = imgsz(img);
+        sz.addValues(2, 2);
 	BufferedImage ol = TexI.mkbuf(sz);
 	Object fcol = ol.getColorModel().getDataElements(col.getRGB(), null);
 	Raster src = img.getRaster();

@@ -26,15 +26,15 @@
 
 package haven;
 
-import static haven.MCache.cmaps;
-import static haven.MCache.tilesz;
-import haven.Resource.Tile;
+import static haven.MCache.tilesz; 
 import haven.GLProgram.VarID;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.lang.reflect.*;
+import java.time.Instant;
 import javax.media.opengl.*;
+
 
 public class MapView extends PView implements DTarget, Console.Directory {
     public long plgob = -1;
@@ -51,7 +51,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     private Selector selection;
     private Coord3f camoff = new Coord3f(Coord3f.o);
     public double shake = 0.0;
-    private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
+    private static final Map<String, Class<? extends Camera>> camtypes = new HashMap<>();
     
     public interface Delayed {
 	public void run(GOut g);
@@ -438,11 +438,11 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public void draw(GOut g) {}
 	    
 	    public boolean setup(RenderList rl) {
-		Coord cc = MapView.this.cc.div(tilesz).div(MCache.cutsz);
+		Coord cc = MapView.this.cc.div(tilesz).divValues(MCache.cutsz);
 		Coord o = new Coord();
 		for(o.y = -view; o.y <= view; o.y++) {
 		    for(o.x = -view; o.x <= view; o.x++) {
-			Coord pc = cc.add(o).mul(MCache.cutsz).mul(tilesz);
+			Coord pc = cc.add(o).mulValues(MCache.cutsz).mulValues(tilesz);
 			MapMesh cut = glob.map.getcut(cc.add(o));
 			rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
 			Collection<Gob> fol;
@@ -480,11 +480,11 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public void draw(GOut g) {}
 
 	    public boolean setup(RenderList rl) {
-		Coord cc = MapView.this.cc.div(tilesz).div(MCache.cutsz);
+		Coord cc = MapView.this.cc.div(tilesz).divValues(MCache.cutsz);
 		Coord o = new Coord();
 		for(o.y = -view; o.y <= view; o.y++) {
 		    for(o.x = -view; o.x <= view; o.x++) {
-			Coord pc = cc.add(o).mul(MCache.cutsz).mul(tilesz);
+			Coord pc = cc.add(o).mulValues(MCache.cutsz).mulValues(tilesz);
 			for(int i = 0; i < visol.length; i++) {
 			    if(mats[i] == null)
 				continue;
@@ -513,7 +513,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    xf = gob.loc;
 	    try {
 		Coord3f c = gob.getc();
-		Tiler tile = glob.map.tiler(glob.map.gettile(new Coord(c).div(tilesz)));
+		Tiler tile = glob.map.tiler(glob.map.gettile(new Coord(c).divValues(tilesz)));
 		extra = tile.drawstate(glob, rl.cfg, c);
 	    } catch(Loading e) {
 		extra = null;
@@ -744,6 +744,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
     private void checkmapclick(final GOut g, final Coord c, final Callback<Coord> cb) {
 	new Object() {
+            
 	    MapMesh cut;
 	    Coord tile, pixel;
 	    int dfl = 0;
@@ -779,6 +780,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			    ckdone(4);
 			}
 		    });
+                
 	    }
 
 	    void ckdone(int fl) {
@@ -787,7 +789,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			if((cut == null) || !tile.isect(Coord.z, cut.sz))
 			    cb.done(null);
 			else
-			    cb.done(cut.ul.add(tile).mul(tilesz).add(pixel));
+			    cb.done(cut.ul.add(tile).mulValues(tilesz).addValues(pixel));
 		    }
 		}
 	    }
@@ -935,7 +937,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
 
     private Loading camload = null, lastload = null;
+    private static long time0;
+    private static int it=0;
     public void draw(GOut g) {
+        
+            it++;
+            if(it==10)
+            {
+            long time1= System.nanoTime();
+                System.out.println("time between drawing: "+(time1-time0));
+            time0=System.nanoTime();
+            it=0;
+            }
 	glob.map.sendreqs();
 	if((olftimer != 0) && (olftimer < System.currentTimeMillis()))
 	    unflashol();
@@ -947,8 +960,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    undelay(delayed2, g);
 	    poldraw(g);
 	    partydraw(g);
-	    glob.map.reqarea(cc.div(tilesz).sub(MCache.cutsz.mul(view + 1)),
-			     cc.div(tilesz).add(MCache.cutsz.mul(view + 1)));
+	    glob.map.reqarea(cc.div(tilesz).subValues(MCache.cutsz.mul(view + 1)),
+			     cc.div(tilesz).addValues(MCache.cutsz.mul(view + 1)));
 	} catch(Loading e) {
 	    lastload = e;
 	    String text = e.getMessage();
@@ -962,6 +975,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		((Resource.Loading)e).boostprio(5);
 	    }
 	}
+        
     }
     
     public void tick(double dt) {
@@ -995,7 +1009,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
 	public void adjust(Plob plob, Coord pc, Coord mc, int modflags) {
 	    if((modflags & 2) == 0)
-		plob.rc = mc.div(tilesz).mul(tilesz).add(tilesz.div(2));
+		plob.rc = mc.div(tilesz).mulValues(tilesz).addValues(tilesz.div(2));
 	    else
 		plob.rc = mc;
 	    Gob pl = plob.mv().player();

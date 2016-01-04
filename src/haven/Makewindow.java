@@ -137,7 +137,7 @@ public class Makewindow extends Widget {
 	    GOut sg = g.reclip(c, Inventory.invsq.sz());
 	    sg.image(Inventory.invsq, Coord.z);
 	    s.draw(sg);
-	    c = c.add(Inventory.sqsz.x, 0);
+	    c.addValues(Inventory.sqsz.x, 0);
 	}
 	if(qmod != null) {
 	    g.image(qmodl.tex(), new Coord(0, qmy + 4));
@@ -146,7 +146,7 @@ public class Makewindow extends Widget {
 		try {
 		    Tex t = qm.get().layer(Resource.imgc).tex();
 		    g.image(t, c);
-		    c = c.add(t.sz().x + 1, 0);
+		    c.addValues(t.sz().x + 1, 0);
 		} catch(Loading l) {
 		}
 	    }
@@ -156,7 +156,7 @@ public class Makewindow extends Widget {
 	    GOut sg = g.reclip(c, Inventory.invsq.sz());
 	    sg.image(Inventory.invsq, Coord.z);
 	    s.draw(sg);
-	    c = c.add(Inventory.sqsz.x, 0);
+	    c.addValues(Inventory.sqsz.x, 0);
 	}
 	super.draw(g);
     }
@@ -174,7 +174,7 @@ public class Makewindow extends Widget {
 		    Tex t = qm.get().layer(Resource.imgc).tex();
 		    if(mc.isect(c, t.sz()))
 			return(qm.get().layer(Resource.tooltip).t);
-		    c = c.add(t.sz().x + 1, 0);
+		    c.addValues(t.sz().x + 1, 0);
 		}
 	    } catch(Loading l) {
 	    }
@@ -186,7 +186,7 @@ public class Makewindow extends Widget {
 		    tres = s.res.get();
 		    break find;
 		}
-		c = c.add(31, 0);
+		c.addValues(31, 0);
 	    }
 	    c = new Coord(xoff, outy);
 	    for(Spec s : outputs) {
@@ -194,7 +194,7 @@ public class Makewindow extends Widget {
 		    tres = s.res.get();
 		    break find;
 		}
-		c = c.add(31, 0);
+		c.addValues(31, 0);
 	    }
 	}
 	Resource.Tooltip tt;

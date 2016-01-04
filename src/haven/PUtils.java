@@ -155,12 +155,12 @@ public class PUtils {
 
     public static WritableRaster gayblit(WritableRaster dst, int dband, Coord doff, Raster src, int sband, Coord soff) {
 	if(doff.x < 0) {
-	    soff = soff.add(-doff.x, 0);
-	    doff = doff.add(-doff.x, 0);
+	    soff.addValues(-doff.x, 0);
+	    doff.addValues(-doff.x, 0);
 	}
 	if(doff.y < 0) {
-	    soff = soff.add(0, -doff.x);
-	    doff = doff.add(0, -doff.x);
+	    soff.addValues(0, -doff.x);
+	    doff.addValues(0, -doff.x);
 	}
 	int w = Math.min(src.getWidth() - soff.x, dst.getWidth() - doff.x), h = Math.min(src.getHeight() - soff.y, dst.getHeight() - doff.y);
 	for(int y = 0; y < h; y++) {

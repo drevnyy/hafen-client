@@ -79,7 +79,7 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public int hashCode() {
 	return(((y & 0xffff) << 16) | (x & 0xffff));
     }
-	
+
     public Coord add(int ax, int ay) {
 	return(new Coord(x + ax, y + ay));
     }
@@ -87,7 +87,10 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public Coord add(Coord b) {
 	return(add(b.x, b.y));
     }
-	
+    
+    public Coord add(Coord3f b) {
+	return(add((int)b.x, (int)b.y));
+    }
     public Coord sub(int ax, int ay) {
 	return(new Coord(x - ax, y - ay));
     }
@@ -127,11 +130,73 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public Coord mod(Coord d) {
 	return(new Coord(Utils.floormod(x, d.x), Utils.floormod(y, d.y)));
     }
+    
+    
+    public Coord addValues(int ax, int ay) {
+	x += ax;
+        y += ay;
+        return this;
+    }
+    public Coord addValues(Coord b) {
+	return(addValues(b.x, b.y));
+    }
+    public Coord subValues(int ax, int ay) {
+        x -= ax;
+        y -= ay;
+        return this;
+    }
 	
+    public Coord subValues(Coord b) {
+	return(subValues(b.x, b.y));
+    }
     public boolean isect(Coord c, Coord s) {
 	return((x >= c.x) && (y >= c.y) && (x < c.x + s.x) && (y < c.y + s.y));
     }
+   
+    public Coord mulValues(int fx, int fy) {
+        x *= fx;
+        y *= fy;
+        return this;
+    }
+    
+    public Coord mulValues(int f) {
+	return(mulValues(f,f));
+    }
+
+
+    public Coord mulValues(double f) {
+	return(mulValues((int)f,(int)f));
+    }
 	
+    public Coord mulValues(Coord f) {
+	return(mulValues(f.x,f.y));
+    }
+    
+    public Coord invValues() {
+	x=-x;
+        y=-y;
+        return this;
+    }
+
+    public Coord divValues(int x,int y) {
+	x=Utils.floordiv(this.x, x);
+        y=Utils.floordiv(this.y, y);
+        return this;
+    }    
+    public Coord divValues(Coord d) {
+	return divValues(d.x,d.y);
+    }
+	
+    public Coord divValues(int d) {
+	return(divValues(d,d));
+    }
+	
+    public Coord modValues(Coord d) {
+	x=Utils.floormod(x, d.x);
+        y=Utils.floormod(y, d.y);
+        return this;
+    }
+    
     public String toString() {
 	return("(" + x + ", " + y + ")");
     }

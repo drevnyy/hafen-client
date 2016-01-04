@@ -166,7 +166,7 @@ public class Text {
 	public Line render(String text, Color c) {
 	    Coord sz = strsize(text);
 	    if(sz.x < 1)
-		sz = sz.add(1, 0);
+		sz.addValues(1, 0);
 	    BufferedImage img = TexI.mkbuf(sz);
 	    Graphics g = img.createGraphics();
 	    if(aa)

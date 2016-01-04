@@ -92,6 +92,12 @@ public class Coord3f {
     public Coord3f div(float f) {
 	return(new Coord3f(x / f, y / f, z / f));
     }
+    public Coord3f divValues(float f) {
+	x /= f;
+        y /= f;
+        z /= f;
+        return this;
+    }
     
     public Coord3f inv() {
 	return(new Coord3f(-x, -y, -z));

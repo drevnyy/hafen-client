@@ -36,7 +36,7 @@ public class Matrix4f {
 	m = new float[16];
     }
     
-    public Matrix4f(Matrix4f b) {
+    public Matrix4f(Matrix4f b) { 
 	this();
 	System.arraycopy(b.m, 0, m, 0, 16);
     }

@@ -93,7 +93,7 @@ public class KinInfo extends GAttrib {
     final PView.Draw2D fx = new PView.Draw2D() {
 	    public void draw2d(GOut g) {
 		if(gob.sc != null) {
-		    Coord sc = gob.sc.add(new Coord(gob.sczu.mul(15)));
+		    Coord sc = gob.sc.add(gob.sczu.mul(15));
 		    if(sc.isect(Coord.z, g.sz)) {
 			long now = System.currentTimeMillis();
 			if(seen == 0)

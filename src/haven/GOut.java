@@ -199,7 +199,7 @@ public class GOut {
 	if(tex == null)
 	    return;
 	st.set(cur2d);
-	ul = ul.add(this.tx);
+	ul.addValues(this.tx);
 	Coord br = ul.add(sz);
 	if(ul.x < this.ul.x)
 	    ul.x = this.ul.x;

@@ -254,9 +254,9 @@ public class FightWnd extends Widget {
 	Frame.around(this, Collections.singletonList(info));
 
 	add(new Img(CharWnd.catf.render("Martial Arts & Combat Schools").tex()), 0, 0);
-	actlist = add(new Actions(250, 8), new Coord(245, 35).add(wbox.btloff()));
+	actlist = add(new Actions(250, 8), new Coord(245, 35).addValues(wbox.btloff()));
 	Frame.around(this, Collections.singletonList(actlist));
-	savelist = add(new Savelist(250, 3), new Coord(245, 225).add(wbox.btloff()));
+	savelist = add(new Savelist(250, 3), new Coord(245, 225).addValues(wbox.btloff()));
 	Frame.around(this, Collections.singletonList(savelist));
 
 	add(new Button(110, "Load", false) {

@@ -200,20 +200,20 @@ public class Window extends Widget implements DTarget {
     }
 
     private void placecbtn() {
-	cbtn.c = xlate(new Coord(ctl.x + csz.x - cbtn.sz.x, ctl.y).add(2, -2), false);
+	cbtn.c = xlate(new Coord(ctl.x + csz.x - cbtn.sz.x, ctl.y).addValues(2, -2), false);
     }
 
     public void resize(Coord sz) {
 	asz = sz;
 	csz = asz.add(mrgn.mul(2));
-	wsz = csz.add(tlm).add(brm);
-	this.sz = wsz.add(tlo).add(rbo);
+	wsz = csz.add(tlm).addValues(brm);
+	this.sz = wsz.add(tlo).addValues(rbo);
 	ctl = tlo.add(tlm);
 	atl = ctl.add(mrgn);
 	cmw = (cap == null)?0:(cap.sz().x);
 	cmw = Math.max(cmw, wsz.x / 4);
 	cptl = new Coord(ctl.x, tlo.y);
-	cpsz = tlo.add(cpo.x + cmw, cm.sz().y).sub(cptl);
+	cpsz = tlo.add(cpo.x + cmw, cm.sz().y).subValues(cptl);
 	cmw = cmw - (cl.sz().x - cpo.x) - 5;
 	cbtn.c = xlate(tlo.add(wsz.x - cbtn.sz.x, 0), false);
 	for(Widget ch = child; ch != null; ch = ch.next)

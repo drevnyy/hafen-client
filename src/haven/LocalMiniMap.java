@@ -133,11 +133,11 @@ public class LocalMiniMap extends Widget {
     }
     
     public Coord p2c(Coord pc) {
-	return(pc.div(tilesz).sub(cc).add(sz.div(2)));
+	return(pc.div(tilesz).subValues(cc).addValues(sz.div(2)));
     }
 
     public Coord c2p(Coord c) {
-	return(c.sub(sz.div(2)).add(cc).mul(tilesz).add(tilesz.div(2)));
+	return(c.sub(sz.div(2)).addValues(cc).mulValues(tilesz).addValues(tilesz.div(2)));
     }
 
     public void drawicons(GOut g) {
@@ -201,8 +201,8 @@ public class LocalMiniMap extends Widget {
 		    if(f == null) {
 			f = Defer.later(new Defer.Callable<MapTile> () {
 				public MapTile call() {
-				    Coord ul = plg.ul.sub(cmaps).add(1, 1);
-				    return(new MapTile(new TexI(drawmap(ul, cmaps.mul(3).sub(2, 2))), ul, plg, seq));
+				    Coord ul = plg.ul.sub(cmaps).addValues(1, 1);
+				    return(new MapTile(new TexI(drawmap(ul, cmaps.mul(3).subValues(2, 2))), ul, plg, seq));
 				}
 			    });
 			cache.put(new Pair<Grid, Integer>(plg, seq), f);
@@ -214,7 +214,7 @@ public class LocalMiniMap extends Widget {
 	}
 	if(cur != null) {
 	    g.image(MiniMap.bg, Coord.z);
-	    g.image(cur.img, cur.ul.sub(cc).add(sz.div(2)));
+	    g.image(cur.img, cur.ul.sub(cc).addValues(sz.div(2)));
 	    try {
 		synchronized(ui.sess.glob.party.memb) {
 		    for(Party.Member m : ui.sess.glob.party.memb.values()) {

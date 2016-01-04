@@ -657,8 +657,8 @@ public class RichText extends Text {
 	    fp.prepare(rs);
 	    fp = layout(fp, width);
 	    Coord sz = bounds(fp);
-	    if(sz.x < 1) sz = sz.add(1, 0);
-	    if(sz.y < 1) sz = sz.add(0, 1);
+	    if(sz.x < 1) sz.addValues(1, 0);
+	    if(sz.y < 1) sz.addValues(0, 1);
 	    BufferedImage img = TexI.mkbuf(sz);
 	    Graphics2D g = img.createGraphics();
 	    if(aa)

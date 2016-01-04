@@ -87,8 +87,8 @@ public class BGL {
                     long time1=System.nanoTime();
             if(it==10)
             {
-                System.out.println("time of 10 BGL runs: "+(time0));
-            time0=System.nanoTime();
+                System.out.println("time of 10 BGL runs: "+(time0/1000000)+"ms");
+            time0=0;
             it=0;
             }
 	for(int i = 0; i < n; i++) {

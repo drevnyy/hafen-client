@@ -951,15 +951,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
     private Loading camload = null, lastload = null;
     private static long time0;
+    private static long time2=0;
     private static int it=0;
     public void draw(GOut g) {
         
-            it++;
+                    it++;
+                    long time1=System.nanoTime();
             if(it==10)
             {
-            long time1= System.nanoTime();
-                System.out.println("time between drawing: "+(time1-time0));
-            time0=System.nanoTime();
+                System.out.println("time of 10 MapView.draw runs: "+(time0/1000000)+"ms");
+                System.out.println("time of 10 program cycles: "+((System.nanoTime()-time2)/1000000)+"ms");
+                time2=System.nanoTime();
+            time0=0;
             it=0;
             }
 	glob.map.sendreqs();
@@ -989,7 +992,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		((Resource.Loading)e).boostprio(5);
 	    }
 	}
-        
+                time0+=System.nanoTime()-time1;
     }
     private Coord GetUpperLeftRefreshCoord()
     {

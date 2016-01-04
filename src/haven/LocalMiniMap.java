@@ -133,11 +133,18 @@ public class LocalMiniMap extends Widget {
     }
     
     public Coord p2c(Coord pc) {
-	return(pc.div(tilesz).subValues(cc).addValues(sz.div(2)));
+	Coord result=pc.div(tilesz);
+        result.subValues(cc);
+        result.addValues(sz.div(2));
+        return result;
     }
 
     public Coord c2p(Coord c) {
-	return(c.sub(sz.div(2)).addValues(cc).mulValues(tilesz).addValues(tilesz.div(2)));
+	Coord result =c.sub(sz.div(2));
+        result.addValues(cc);
+        result.mulValues(tilesz);
+        result.addValues(tilesz.div(2));
+        return result;
     }
 
     public void drawicons(GOut g) {
@@ -201,8 +208,11 @@ public class LocalMiniMap extends Widget {
 		    if(f == null) {
 			f = Defer.later(new Defer.Callable<MapTile> () {
 				public MapTile call() {
-				    Coord ul = plg.ul.sub(cmaps).addValues(1, 1);
-				    return(new MapTile(new TexI(drawmap(ul, cmaps.mul(3).subValues(2, 2))), ul, plg, seq));
+				    Coord ul = plg.ul.sub(cmaps);
+                                    ul.addValues(1, 1);
+                                    Coord mapSize = cmaps.mul(3);
+                                    mapSize.subValues(2, 2);
+				    return(new MapTile(new TexI(drawmap(ul, mapSize)), ul, plg, seq));
 				}
 			    });
 			cache.put(new Pair<Grid, Integer>(plg, seq), f);
@@ -214,7 +224,9 @@ public class LocalMiniMap extends Widget {
 	}
 	if(cur != null) {
 	    g.image(MiniMap.bg, Coord.z);
-	    g.image(cur.img, cur.ul.sub(cc).addValues(sz.div(2)));
+            Coord imgCoord = cur.ul.sub(cc);
+            imgCoord.addValues(sz.div(2));
+	    g.image(cur.img, imgCoord);
 	    try {
 		synchronized(ui.sess.glob.party.memb) {
 		    for(Party.Member m : ui.sess.glob.party.memb.values()) {

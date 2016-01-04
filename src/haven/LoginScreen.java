@@ -235,7 +235,8 @@ public class LoginScreen extends Widget {
     }
 
     public void presize() {
-	c = parent.sz.div(2).subValues(sz.div(2));
+	c = parent.sz.div(2);
+        c.subValues(sz.div(2));
     }
 
     protected void added() {

@@ -62,7 +62,9 @@ public class SpriteLink extends Resource.Layer {
 	public Sprite create(Owner owner, Resource res, Message sdt) {
 	    Gob gob = (Gob)owner;
 	    Glob glob = gob.glob;
-	    Tileset t = glob.map.tileset(glob.map.gettile(new Coord(gob.getc()).divValues(MCache.tilesz)));
+            Coord tmp=new Coord(gob.getc());
+            tmp.divValues(MCache.tilesz);
+	    Tileset t = glob.map.tileset(glob.map.gettile(tmp));
 	    for(int i = 0; i < tag.length; i++) {
 		if(Arrays.binarySearch(t.tags, tag[i]) >= 0)
 		    return(sub[i].create(owner, res, sdt));

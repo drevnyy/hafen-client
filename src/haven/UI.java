@@ -30,7 +30,6 @@ import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.InputEvent;
-import static haven.Utils.el;
 
 public class UI {
     public RootWidget root;
@@ -281,7 +280,9 @@ public class UI {
     }
 	
     private Coord wdgxlate(Coord c, Widget wdg) {
-	return(c.add(wdg.c.inv()).addValues(wdg.parent.rootpos().inv()));
+        Coord tmp = c.add(wdg.c.inv());
+        tmp.addValues(wdg.parent.rootpos().inv());
+        return tmp;
     }
 	
     public boolean dropthing(Widget w, Coord c, Object thing) {

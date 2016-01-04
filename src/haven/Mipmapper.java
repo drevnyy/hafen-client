@@ -45,7 +45,7 @@ public abstract class Mipmapper {
     public static final Mipmapper3 avg = new Mipmapper3() {
 	    public byte[] gen4(Coord dim, byte[] data, int fmt) {
 		int dst = dim.x * 4;
-		dim.divValues(2);
+		dim = dim.div(2);
 		boolean lx = false, ly = false;
 		if(dim.x < 1) {dim.x = 1; lx = true;}
 		if(dim.y < 1) {dim.y = 1; ly = true;}
@@ -111,7 +111,7 @@ public abstract class Mipmapper {
 
 	    public byte[] gen3(Coord dim, byte[] data, int fmt) {
 		int dst = dim.x * 3;
-		dim.divValues(2);
+		dim = dim.div(2);
 		boolean lx = false, ly = false;
 		if(dim.x < 1) {dim.x = 1; lx = true;}
 		if(dim.y < 1) {dim.y = 1; ly = true;}
@@ -168,7 +168,7 @@ public abstract class Mipmapper {
 	    public byte[] gen4(Coord dim, byte[] data, int fmt) {
 		Random rnd = new Random();
 		int dst = dim.x * 4;
-		dim.divValues(2);
+		dim = dim.div(2);
 		boolean lx = false, ly = false;
 		if(dim.x < 1) {dim.x = 1; lx = true;}
 		if(dim.y < 1) {dim.y = 1; ly = true;}
@@ -198,7 +198,7 @@ public abstract class Mipmapper {
     public static final Mipmapper cnt = new Mipmapper() {
 	    public byte[] gen4(Coord dim, byte[] data, int fmt) {
 		int dst = dim.x * 4;
-		dim.divValues(2);
+		dim = dim.div(2);
 		boolean lx = false, ly = false;
 		if(dim.x < 1) {dim.x = 1; lx = true;}
 		if(dim.y < 1) {dim.y = 1; ly = true;}
@@ -277,7 +277,7 @@ public abstract class Mipmapper {
     public static final Mipmapper dav = new Mipmapper() {
 	    public byte[] gen4(Coord dim, byte[] data, int fmt) {
 		int dst = dim.x * 4;
-		dim.divValues(2);
+		dim = dim.div(2);
 		boolean lx = false, ly = false;
 		if(dim.x < 1) {dim.x = 1; lx = true;}
 		if(dim.y < 1) {dim.y = 1; ly = true;}

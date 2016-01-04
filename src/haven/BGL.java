@@ -78,8 +78,19 @@ public class BGL {
 	list = new Command[c];
     }
     public BGL() {this(128);}
+  private static long time0=0;
+    private static int it=0;
+        
 
     public void run(GL2 gl) {
+                    it++;
+                    long time1=System.nanoTime();
+            if(it==10)
+            {
+                System.out.println("time of 10 BGL runs: "+(time0));
+            time0=System.nanoTime();
+            it=0;
+            }
 	for(int i = 0; i < n; i++) {
 	    try {
 		list[i].run(gl);
@@ -87,6 +98,7 @@ public class BGL {
 		throw(new BGLException(this, list[i], exc));
 	    }
 	}
+        time0+=System.nanoTime()-time1;
     }
 
     private void add(Command cmd) {

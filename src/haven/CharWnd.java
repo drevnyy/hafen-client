@@ -883,7 +883,7 @@ public class CharWnd extends Window {
 		    }
 
 		    public void presize() {
-			c = parent.sz.sub(sz).divValues(2);
+			c = parent.sz.sub(sz).div(2);
 		    }
 
 		    protected void added() {
@@ -1525,7 +1525,7 @@ public class CharWnd extends Window {
 
 	    skills = tabs.add();
 	    skills.add(new Img(catf.render("Lore & Skills").tex()), new Coord(x - 5, y)); y += 35;
-	    final LoadingTextBox info = skills.add(new LoadingTextBox(new Coord(attrw, 260), "", ifnd), new Coord(x, y).addValues(wbox.btloff()));
+	    final LoadingTextBox info = skills.add(new LoadingTextBox(new Coord(attrw, 260), "", ifnd), new Coord(x, y).add(wbox.btloff()));
 	    info.bg = new Color(0, 0, 0, 128);
 	    Frame.around(skills, Collections.singletonList(info));
 
@@ -1549,7 +1549,7 @@ public class CharWnd extends Window {
 		this.nsk.dav = true;
 		y = Frame.around(nsk, Collections.singletonList(this.nsk)).sz.y + 5;
 		int rx = attrw - 10;
-		Frame.around(nsk, Area.sized(new Coord(0, y).addValues(wbox.btloff()), new Coord(attrw, 69)));
+		Frame.around(nsk, Area.sized(new Coord(0, y).add(wbox.btloff()), new Coord(attrw, 69)));
 		nsk.add(new Label("Learning points:"), new Coord(15, y + 10));
 		nsk.add(new ExpLabel(new Coord(rx, y + 10)));
 		nsk.add(new Label("Cost:"), new Coord(15, y + 25));
@@ -1621,7 +1621,7 @@ public class CharWnd extends Window {
 	{
 	    wounds = tabs.add();
 	    wounds.add(new Img(catf.render("Health & Wounds").tex()), new Coord(0, 0));
-	    this.wounds = wounds.add(new WoundList(attrw, 12), new Coord(260, 35).addValues(wbox.btloff()));
+	    this.wounds = wounds.add(new WoundList(attrw, 12), new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(wounds, Collections.singletonList(this.wounds));
 	    woundbox = wounds.add(new Widget(new Coord(attrw, this.wounds.sz.y)) {
 		    public void draw(GOut g) {
@@ -1635,7 +1635,7 @@ public class CharWnd extends Window {
 			if(w == wound)
 			    wound = null;
 		    }
-		}, new Coord(5, 35).addValues(wbox.btloff()));
+		}, new Coord(5, 35).add(wbox.btloff()));
 	    Frame.around(wounds, Collections.singletonList(woundbox));
 	}
 
@@ -1655,17 +1655,17 @@ public class CharWnd extends Window {
 			if(w == quest)
 			    quest = null;
 		    }
-		}, new Coord(5, 35).addValues(wbox.btloff()));
+		}, new Coord(5, 35).add(wbox.btloff()));
 	    Frame.around(quests, Collections.singletonList(questbox));
 	    Tabs lists = new Tabs(new Coord(260, 35), new Coord(attrw + wbox.bisz().x, 0), quests);
 	    Tabs.Tab cqst = lists.add();
 	    {
-		this.cqst = cqst.add(new QuestList(attrw, 11), new Coord(0, 0).addValues(wbox.btloff()));
+		this.cqst = cqst.add(new QuestList(attrw, 11), new Coord(0, 0).add(wbox.btloff()));
 		Frame.around(cqst, Collections.singletonList(this.cqst));
 	    }
 	    Tabs.Tab dqst = lists.add();
 	    {
-		this.dqst = dqst.add(new QuestList(attrw, 11), new Coord(0, 0).addValues(wbox.btloff()));
+		this.dqst = dqst.add(new QuestList(attrw, 11), new Coord(0, 0).add(wbox.btloff()));
 		Frame.around(dqst, Collections.singletonList(this.dqst));
 	    }
 	    lists.pack();
@@ -1724,9 +1724,9 @@ public class CharWnd extends Window {
     public void addchild(Widget child, Object... args) {
 	String place = (args[0] instanceof String)?(((String)args[0]).intern()):null;
 	if(place == "study") {
-	    sattr.add(child, new Coord(260, 35).addValues(wbox.btloff()));
+	    sattr.add(child, new Coord(260, 35).add(wbox.btloff()));
 	    Frame.around(sattr, Collections.singletonList(child));
-	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).addValues(wbox.btloff().x, 0));
+	    Widget inf = sattr.add(new StudyInfo(new Coord(attrw - 150, child.sz.y), child), new Coord(260 + 150, child.c.y).add(wbox.btloff().x, 0));
 	    Frame.around(sattr, Collections.singletonList(inf));
 	} else if(place == "fmg") {
 	    fgt.add(child, 0, 0);

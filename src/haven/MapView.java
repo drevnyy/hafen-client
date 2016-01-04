@@ -438,11 +438,14 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public void draw(GOut g) {}
 	    
 	    public boolean setup(RenderList rl) {
-		Coord cc = MapView.this.cc.div(tilesz).divValues(MCache.cutsz);
+		Coord cc = MapView.this.cc.div(tilesz);
+                cc.divValues(MCache.cutsz);
 		Coord o = new Coord();
 		for(o.y = -view; o.y <= view; o.y++) {
 		    for(o.x = -view; o.x <= view; o.x++) {
-			Coord pc = cc.add(o).mulValues(MCache.cutsz).mulValues(tilesz);
+			Coord pc = cc.add(o);
+                        pc.mulValues(MCache.cutsz);
+                        pc.mulValues(tilesz);
 			MapMesh cut = glob.map.getcut(cc.add(o));
 			rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
 			Collection<Gob> fol;
@@ -480,11 +483,14 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public void draw(GOut g) {}
 
 	    public boolean setup(RenderList rl) {
-		Coord cc = MapView.this.cc.div(tilesz).divValues(MCache.cutsz);
+		Coord cc = MapView.this.cc.div(tilesz);
+                cc.divValues(MCache.cutsz);
 		Coord o = new Coord();
 		for(o.y = -view; o.y <= view; o.y++) {
 		    for(o.x = -view; o.x <= view; o.x++) {
-			Coord pc = cc.add(o).mulValues(MCache.cutsz).mulValues(tilesz);
+			Coord pc = cc.add(o);
+                        pc.mulValues(MCache.cutsz);
+                        pc.mulValues(tilesz);
 			for(int i = 0; i < visol.length; i++) {
 			    if(mats[i] == null)
 				continue;
@@ -512,9 +518,11 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	if(xf == null) {
 	    xf = gob.loc;
 	    try {
-		Coord3f c = gob.getc();
-		Tiler tile = glob.map.tiler(glob.map.gettile(new Coord(c).divValues(tilesz)));
-		extra = tile.drawstate(glob, rl.cfg, c);
+		Coord3f c3f = gob.getc();
+                Coord c = new Coord(c3f);
+                c.divValues(tilesz);
+		Tiler tile = glob.map.tiler(glob.map.gettile(c));
+		extra = tile.drawstate(glob, rl.cfg, c3f);
 	    } catch(Loading e) {
 		extra = null;
 	    }
@@ -789,8 +797,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			if((cut == null) || !tile.isect(Coord.z, cut.sz))
 			    cb.done(null);
 			else
-			    cb.done(cut.ul.add(tile).mulValues(tilesz).addValues(pixel));
-		    }
+                        {
+                            Coord c = cut.ul.add(tile);
+                            c.mulValues(tilesz);
+                            c.addValues(pixel);
+			    cb.done(c);
+                        }
+                    }
 		}
 	    }
 	};
@@ -960,8 +973,9 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    undelay(delayed2, g);
 	    poldraw(g);
 	    partydraw(g);
-	    glob.map.reqarea(cc.div(tilesz).subValues(MCache.cutsz.mul(view + 1)),
-			     cc.div(tilesz).addValues(MCache.cutsz.mul(view + 1)));
+            
+	    glob.map.reqarea(GetUpperLeftRefreshCoord(),
+			     GetBottomRightRefreshCoord());
 	} catch(Loading e) {
 	    lastload = e;
 	    String text = e.getMessage();
@@ -977,7 +991,18 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
         
     }
-    
+    private Coord GetUpperLeftRefreshCoord()
+    {
+        Coord target = cc.div(tilesz);
+        target.subValues(MCache.cutsz.mul(view + 1));
+        return target;
+    }
+    private Coord GetBottomRightRefreshCoord()
+    {
+        Coord target = cc.div(tilesz);
+        target.subValues(MCache.cutsz.mul(view + 1));
+        return target;
+    }
     public void tick(double dt) {
 	camload = null;
 	try {
@@ -1009,8 +1034,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
 
 	public void adjust(Plob plob, Coord pc, Coord mc, int modflags) {
 	    if((modflags & 2) == 0)
-		plob.rc = mc.div(tilesz).mulValues(tilesz).addValues(tilesz.div(2));
-	    else
+            {
+                Coord plobCoord=mc.div(tilesz);
+                plobCoord.mulValues(tilesz);
+                plobCoord.addValues(tilesz.div(2));
+		plob.rc = plobCoord;
+            }
+            else
 		plob.rc = mc;
 	    Gob pl = plob.mv().player();
 	    if((pl != null) && !freerot)

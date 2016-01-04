@@ -76,7 +76,9 @@ public class FlowerMenu extends Widget {
 	    g.chcolor(new Color(255, 255, 255, (int)(255 * a)));
 	    g.image(pbg, c33, c33, sz.sub(6, 6));
 	    pbox.draw(g, Coord.z, sz);
-	    g.image(text.tex(), sz.div(2).subValues(text.sz().div(2)));
+            Coord imageCoord=sz.div(2);
+            imageCoord.subValues(text.sz().div(2));
+	    g.image(text.tex(), imageCoord);
 	}
 
 	public boolean mousedown(Coord c, int button) {

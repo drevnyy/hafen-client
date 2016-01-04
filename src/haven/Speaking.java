@@ -66,7 +66,11 @@ public class Speaking extends GAttrib {
     final PView.Draw2D fx = new PView.Draw2D() {
 	    public void draw2d(GOut g) {
 		if(gob.sc != null)
-		    Speaking.this.draw(g, gob.sc.add(gob.sczu.mul(zo)).addValues(3, 0));
-	    }
+                {
+                    Coord tmp = gob.sc.add(gob.sczu.mul(zo));
+                    tmp.addValues(3, 0);
+		    Speaking.this.draw(g, tmp);
+                }
+            }
 	};
 }

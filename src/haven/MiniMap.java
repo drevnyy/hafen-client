@@ -190,7 +190,10 @@ public class MiniMap extends Widget {
 		Tex tex = getgrid(grid.mnm);
 		if(tex == null)
 		    continue;
-		g.image(tex, cg.mul(cmaps).addValues(tc.inv()).addValues(sz.div(2)));
+                Coord imageCoord = cg.mul(cmaps);
+                imageCoord.addValues(tc.inv());
+                imageCoord.addValues(sz.div(2));
+		g.image(tex, imageCoord);
 	    }
 	}
 	if(missing) {
@@ -206,7 +209,9 @@ public class MiniMap extends Widget {
 		    }
 		    if(ptc == null)
 			continue;
-		    ptc = ptc.div(tilesz).addValues(tc.inv()).addValues(sz.div(2));
+		    ptc.divValues(tilesz);
+                    ptc.addValues(tc.inv());
+                    ptc.addValues(sz.div(2));
 		    g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
 		    g.image(plx.layer(Resource.imgc).tex(), ptc.add(plx.layer(Resource.negc).cc.inv()));
 		    g.chcolor();

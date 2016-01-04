@@ -158,7 +158,7 @@ public class MCache {
 		    if(set.flavobjs.size() > 0) {
 			if((fp % set.flavprob) == 0) {
 			    Indir<Resource> r = set.flavobjs.pick(rp % set.flavobjs.tw);
-			    Gob g = new Flavobj(c.add(tc).mulValues(tilesz).addValues(tilesz.div(2)), a * 2 * Math.PI);
+			    Gob g = new Flavobj(GetFlavObjCoord(c, tc), a * 2 * Math.PI);
 			    g.setattr(new ResDrawable(g, r, Message.nil));
 			    Coord cc = c.div(cutsz);
 			    fo[cc.x + (cc.y * cutn.x)].add(g);
@@ -168,7 +168,13 @@ public class MCache {
 	    }
 	    this.fo = fo;
 	}
-
+        private Coord GetFlavObjCoord(Coord c,Coord tc)
+        {
+            Coord target=c.add(tc);
+            target.mulValues(tilesz);
+            target.addValues(tilesz.div(2));
+            return target;
+        }
 	public Collection<Gob> getfo(Coord cc) {
 	    if(fo == null)
 		makeflavor();
@@ -423,7 +429,9 @@ public class MCache {
 	Grid g = getgridt(tc);
 	int ol = g.getol(tc.sub(g.ul));
 	for(Overlay lol : ols) {
-	    if(tc.isect(lol.c1, lol.c2.add(lol.c1.inv()).addValues(1, 1)))
+            Coord tmp = lol.c2.add(lol.c1.inv());
+            tmp.addValues(1, 1);
+	    if(tc.isect(lol.c1, tmp))
 		ol |= lol.mask;
 	}
 	return(ol);

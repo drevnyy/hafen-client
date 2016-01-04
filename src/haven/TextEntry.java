@@ -132,7 +132,9 @@ public class TextEntry extends SIWidget {
 	if(hasfocus && (((System.currentTimeMillis() - focusstart) % 1000) < 500)) {
 	    int cx = tcache.advance(buf.point);
 	    int lx = cx - sx + 1;
-	    g.image(caret, toff.add(coff).addValues(lx, 0));
+            Coord tmp=toff.add(coff);
+            tmp.addValues(lx, 0);
+	    g.image(caret, tmp);
 	}
     }
 

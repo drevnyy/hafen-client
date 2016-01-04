@@ -192,7 +192,12 @@ public class Ridges extends MapMesh.Hooks {
 	}
 	int nseg = Math.max((hi - lo + (segh / 2)) / segh, 2) - 1;
 	Vertex[] ret = new Vertex[nseg + 1];
-	Coord3f base = new Coord3f(tc.add(tccs[e]).addValues(tc.add(tccs[(e + 1) % 4])).mulValues(tilesz).mulValues(1, -1)).divValues(2); 
+        Coord baseCoord = tc.add(tccs[e]);
+        baseCoord.addValues(tc.add(tccs[(e + 1) % 4]));
+        baseCoord.mulValues(tilesz);
+        baseCoord.mulValues(1, -1);
+	Coord3f base = new Coord3f(baseCoord);
+        base.divValues(2); 
         base.z = lo;
 	float segi = (float)(hi - lo) / (float)nseg;
 	Random rnd = m.grnd(m.ul.add(tc));
@@ -245,9 +250,14 @@ public class Ridges extends MapMesh.Hooks {
 
     private int[] tczs(Coord tc) {
 	int[] ret = new int[4];
+        Coord tmp;
 	for(int i = 0; i < 4; i++)
-	    ret[i] = m.map.getz(tc.add(m.ul).addValues(tccs[i]));
-	return(ret);
+        {
+            tmp=tc.add(m.ul);
+            tmp.addValues(tccs[i]);
+	    ret[i] = m.map.getz(tmp);
+        }
+        return(ret);
     }
 
     private static int isend(boolean[] b) {
@@ -284,7 +294,8 @@ public class Ridges extends MapMesh.Hooks {
     }
 
     private RPart connect(Coord tc, Vertex[] l, Vertex[] r) {
-	Coord pc = tc.mul(tilesz).mulValues(1, -1);
+	Coord pc = tc.mul(tilesz);
+        pc.mulValues(1, -1);
 	int n = l.length, m = r.length;
 	Vertex[] va = new Vertex[n + m];
 	float[] tcx = new float[n + m], tcy = new float[n + m];
@@ -340,7 +351,8 @@ public class Ridges extends MapMesh.Hooks {
 	    ms.fortile(tc.add(tccs[(dir + 1) % 4])),
 	};
 	float[] tcx = new float[8], tcy = new float[8];
-	Coord pc = tc.mul(tilesz).mulValues(1, -1);
+	Coord pc = tc.mul(tilesz);
+        pc.mulValues(1, -1);
 	for(int i = 0; i < 8; i++) {
 	    tcx[i] = clip((gv[i].x - pc.x) / tilesz.x, 0, 1);
 	    tcy[i] = clip(-(gv[i].y - pc.y) / tilesz.y, 0, 1);
@@ -399,7 +411,8 @@ public class Ridges extends MapMesh.Hooks {
 	    edgec[eo(tc, dir)][edgelc(tc, dir)?0:1],
 	};
 	float[] tcx = new float[8], tcy = new float[8];
-	Coord pc = tc.mul(tilesz).mulValues(1, -1);
+	Coord pc = tc.mul(tilesz);
+        pc.mulValues(1, -1);
 	for(int i = 0; i < 8; i++) {
 	    tcx[i] = clip((gv[i].x - pc.x) / tilesz.x, 0, 1);
 	    tcy[i] = clip(-(gv[i].y - pc.y) / tilesz.y, 0, 1);
@@ -433,7 +446,8 @@ public class Ridges extends MapMesh.Hooks {
 	    edgec[eo(tc, dir)][edgelc(tc, dir)?0:1],
 	};
 	float[] tcx = new float[12], tcy = new float[12];
-	Coord pc = tc.mul(tilesz).mulValues(1, -1);
+	Coord pc = tc.mul(tilesz);
+        pc.mulValues(1, -1);
 	for(int i = 0; i < 12; i++) {
 	    tcx[i] = clip((gv[i].x - pc.x) / tilesz.x, 0, 1);
 	    tcy[i] = clip(-(gv[i].y - pc.y) / tilesz.y, 0, 1);
@@ -506,7 +520,8 @@ public class Ridges extends MapMesh.Hooks {
     private static final int[] cg1rfi = {0, 1, 2, 0, 2, 3};
     private static final int[] cg2rfi = {0, 1, 4, 4, 1, 2, 4, 2, 3};
     private void modelcomplex(Coord tc, boolean[] breaks) {
-	Coord gc = tc.add(m.ul), pc = tc.mul(tilesz).mulValues(1, -1);
+	Coord gc = tc.add(m.ul), pc = tc.mul(tilesz);
+        pc.mulValues(1, -1);
 	int[] tczs = tczs(tc);
 	int s;
 	for(s = 0; !breaks[s] || !breaks[(s + 3) % 4]; s++);

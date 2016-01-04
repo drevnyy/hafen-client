@@ -106,10 +106,9 @@ public class Button extends SIWidget {
 	int yo = lg?((hl - hs) / 2):0;
 	g.drawImage(a?dt:ut, 4, yo + 4, sz.x - 8, hs - 8, null);
 
-	Coord tc = new Coord(sz);
-               tc.subValues(Utils.imgsz(cont)).divValues(2);
+	Coord tc = sz.sub(Utils.imgsz(cont)).div(2);
 	if(a)
-	    tc.addValues(1, 1);
+	    tc = tc.add(1, 1);
 	g.drawImage(cont, tc.x, tc.y, null);
 
 	g.drawImage(bl, 0, yo, null);

@@ -39,6 +39,8 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     public final Glob glob;
     Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
     public Collection<Overlay> ols = new LinkedList<Overlay>();
+
+
 	
     public static class Overlay implements Rendered {
 	public Indir<Resource> res;
@@ -151,7 +153,9 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	    ret = ret.add(df.off);
 	return(ret);
     }
-    
+       Coord getc2D() {
+	return(new Coord(getc()));
+    }
     public Coord3f getrc() {
 	return(new Coord3f(rc.x, rc.y, glob.map.getcz(rc)));
     }

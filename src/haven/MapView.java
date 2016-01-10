@@ -32,7 +32,6 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.*;
 import java.lang.reflect.*;
-import java.time.Instant;
 import javax.media.opengl.*;
 
 
@@ -40,7 +39,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public long plgob = -1;
     public Coord cc;
     private final Glob glob;
-    private int view = 2;
+    private int view = 1;
     private Collection<Delayed> delayed = new LinkedList<Delayed>();
     private Collection<Delayed> delayed2 = new LinkedList<Delayed>();
     private Collection<Rendered> extradraw = new LinkedList<Rendered>();
@@ -379,22 +378,26 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public boolean keydown(KeyEvent ev) {
-	    if(ev.getKeyCode() == KeyEvent.VK_LEFT) {
-		tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) - 0.51) + 0.5));
-		return(true);
-	    } else if(ev.getKeyCode() == KeyEvent.VK_RIGHT) {
-		tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) + 0.51) + 0.5));
-		return(true);
-	    } else if(ev.getKeyCode() == KeyEvent.VK_UP) {
-		chfield(tfield - 50);
-		return(true);
-	    } else if(ev.getKeyCode() == KeyEvent.VK_DOWN) {
-		chfield(tfield + 50);
-		return(true);
-	    } else if(ev.getKeyCode() == KeyEvent.VK_HOME) {
-		tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.25f - angl);
-		chfield((float)(100 * Math.sqrt(2)));
-	    }
+            switch (ev.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) - 0.51) + 0.5));
+                    return(true);
+                case KeyEvent.VK_RIGHT:
+                    tangl = (float)(Math.PI * 0.5 * (Math.floor((tangl / (Math.PI * 0.5)) + 0.51) + 0.5));
+                    return(true);
+                case KeyEvent.VK_UP:
+                    chfield(tfield - 50);
+                    return(true);
+                case KeyEvent.VK_DOWN:
+                    chfield(tfield + 50);
+                    return(true);
+                case KeyEvent.VK_HOME:
+                    tangl = angl + (float)Utils.cangle(-(float)Math.PI * 0.25f - angl);
+                    chfield((float)(100 * Math.sqrt(2)));
+                    break;
+                default:
+                    break;
+            }
 	    return(false);
 	}
     }
@@ -411,15 +414,85 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    return(new MapView(sz, parent.ui.sess.glob, mc, pgob));
 	}
     }
-    
+    private static int flavdistance=500;
     public MapView(Coord sz, Glob glob, Coord cc, long plgob) {
 	super(sz);
+        this.map = new Rendered() {
+            public void draw(GOut g) {}
+            
+            public boolean setup(RenderList rl) {
+                Coord me=getPlayerCoord();
+                Coord cc = MapView.this.cc.div(tilesz);
+                cc.divValues(MCache.cutsz);
+                Coord o = new Coord();
+                if(Config.Boost)
+                    view=1;
+                else
+                    view=2;
+                for(o.y = -view; o.y <= view; o.y++) {
+                    for(o.x = -view; o.x <= view; o.x++) {
+                        Coord pc = cc.add(o);
+                        pc.mulValues(MCache.cutsz);
+                        pc.mulValues(tilesz);
+                        MapMesh cut = glob.map.getcut(cc.add(o));
+                        rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
+                        if(!Config.Boost)
+                        {
+                        Collection<Gob> fol;
+                        try {
+                            fol = glob.map.getfo(cc.add(o));
+                        } catch(Loading e) {
+                            fol = Collections.emptyList();
+                        }
+                        ResetFlavdistance();
+                        for(Gob fo : fol)
+                            if(GobInRange(fo,me,flavdistance))
+                                addgob(rl, fo);
+                        }
+                    }
+                }
+                return(false);
+            }
+
+
+
+        };
 	this.glob = glob;
 	this.cc = cc;
 	this.plgob = plgob;
 	setcanfocus(true);
     }
-    
+    private void ResetFlavdistance() {
+        if(fps<40 && flavdistance>0)
+            flavdistance--;
+        if(fps>59 && flavdistance<1500)
+            flavdistance++;
+    }
+   public Coord getPlayerCoord(){
+                try{
+                    return player().getc2D();
+                }catch(Exception e){
+                    while(player() == null)
+                    {
+                        try
+                        {
+                            Thread.sleep(1);
+                        }
+                        catch (Exception xe)
+                        {}
+                        
+                    }
+                }
+                
+                return player().getc2D();
+            }
+
+            private boolean GobInRange(Gob fo, Coord me) {
+                return Config.DrawingDistance>499 || fo.getc2D().dist(me)<Config.DrawingDistance;
+            }
+            private boolean GobInRange(Gob fo, Coord me, int distance) {
+                return distance!=0 && fo.getc2D().dist(me)<distance;
+            }
     public boolean visol(int ol) {
 	return(visol[ol] > 0);
     }
@@ -434,33 +507,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    visol[ol]--;
     }
 
-    private final Rendered map = new Rendered() {
-	    public void draw(GOut g) {}
-	    
-	    public boolean setup(RenderList rl) {
-		Coord cc = MapView.this.cc.div(tilesz);
-                cc.divValues(MCache.cutsz);
-		Coord o = new Coord();
-		for(o.y = -view; o.y <= view; o.y++) {
-		    for(o.x = -view; o.x <= view; o.x++) {
-			Coord pc = cc.add(o);
-                        pc.mulValues(MCache.cutsz);
-                        pc.mulValues(tilesz);
-			MapMesh cut = glob.map.getcut(cc.add(o));
-			rl.add(cut, Location.xlate(new Coord3f(pc.x, -pc.y, 0)));
-			Collection<Gob> fol;
-			try {
-			    fol = glob.map.getfo(cc.add(o));
-			} catch(Loading e) {
-			    fol = Collections.emptyList();
-			}
-			for(Gob fo : fol)
-			    addgob(rl, fo);
-		    }
-		}
-		return(false);
-	    }
-	};
+    private final Rendered map;
     
     private final Rendered mapol = new Rendered() {
 	    private final GLState[] mats;
@@ -534,9 +581,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    public void draw(GOut g) {}
 	    
 	    public boolean setup(RenderList rl) {
+                Coord me=getPlayerCoord();
 		synchronized(glob.oc) {
-		    for(Gob gob : glob.oc)
-			addgob(rl, gob);
+		    for(Gob gob : glob.oc){//list of objects to draw
+                        if(GobInRange(gob,me ))
+                            addgob(rl, gob);
+                    }
 		}
 		return(false);
 	    }
@@ -583,7 +633,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public void setup(RenderList rl) {
 	Gob pl = player();
 	if(pl != null)
-	    this.cc = new Coord(pl.getc());
+	    this.cc = pl.getc2D();
 	synchronized(glob) {
 	    if(glob.lightamb != null) {
 		DirLight light = new DirLight(glob.lightamb, glob.lightdif, glob.lightspc, Coord3f.o.sadd((float)glob.lightelev, (float)glob.lightang, 1f));
@@ -645,7 +695,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public Coord3f getcc() {
 	Gob pl = player();
 	if(pl != null)
-	    return(pl.getc());
+	    return pl.getc();
 	else
 	    return(new Coord3f(cc.x, cc.y, glob.map.getcz(cc)));
     }
@@ -897,7 +947,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     
     private void drawarrow(GOut g, double a) {
-	Coord hsz = sz.div(2);
+	Coord hsz=sz.div(2);
 	double ca = -Coord.z.angle(hsz);
 	Coord ac;
 	if((a > ca) && (a < -ca)) {
@@ -948,23 +998,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	g.chcolor();
     }
-
+    private static int fps=10000;
     private Loading camload = null, lastload = null;
-    private static long time0;
     private static long time2=0;
-    private static int it=0;
     public void draw(GOut g) {
-        
-                    it++;
-                    long time1=System.nanoTime();
-            if(it==10)
-            {
-                System.out.println("time of 10 MapView.draw runs: "+(time0/1000000)+"ms");
-                System.out.println("time of 10 program cycles: "+((System.nanoTime()-time2)/1000000)+"ms");
+                    fps=1000/(int)((System.nanoTime()-time2)/1000000);
                 time2=System.nanoTime();
-            time0=0;
-            it=0;
-            }
 	glob.map.sendreqs();
 	if((olftimer != 0) && (olftimer < System.currentTimeMillis()))
 	    unflashol();
@@ -992,7 +1031,6 @@ public class MapView extends PView implements DTarget, Console.Directory {
 		((Resource.Loading)e).boostprio(5);
 	    }
 	}
-                time0+=System.nanoTime()-time1;
     }
     private Coord GetUpperLeftRefreshCoord()
     {
@@ -1472,11 +1510,12 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	public boolean mmousewheel(Coord mc, int amount) {
 	    return(false);
 	}
-
+Coord tc;
 	public void mmousemove(Coord mc) {
 	    synchronized(MapView.this) {
 		if(sc != null) {
-		    Coord tc = mc.div(MCache.tilesz);
+		    tc.x= mc.x/MCache.tilesz.x;
+		    tc.y= mc.y/MCache.tilesz.y;
 		    Coord c1 = new Coord(Math.min(tc.x, sc.x), Math.min(tc.y, sc.y));
 		    Coord c2 = new Coord(Math.max(tc.x, sc.x), Math.max(tc.y, sc.y));
 		    ol.update(c1, c2);

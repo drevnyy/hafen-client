@@ -29,7 +29,6 @@ package haven;
 import java.util.*;
 import java.lang.ref.*;
 import haven.Resource.Tileset;
-import haven.Resource.Tile;
 
 public class MCache {
     public static final Coord tilesz = new Coord(11, 11);
@@ -141,6 +140,8 @@ public class MCache {
 	}
 
 	private void makeflavor() {
+            if(!Config.Boost)
+            {
 	    @SuppressWarnings("unchecked")
 	    Collection<Gob>[] fo = (Collection<Gob>[])new Collection[cutn.x * cutn.y];
 	    for(int i = 0; i < fo.length; i++)
@@ -168,6 +169,7 @@ public class MCache {
 	    }
 	    this.fo = fo;
 	}
+        }
         private Coord GetFlavObjCoord(Coord c,Coord tc)
         {
             Coord target=c.add(tc);

@@ -29,6 +29,13 @@ package haven;
 import java.net.URL;
 import java.io.PrintStream;
 import static haven.Utils.getprop;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import java.util.Properties;
 
 public class Config {
     public static String authuser = getprop("haven.authuser", null);
@@ -50,12 +57,78 @@ public class Config {
     public static boolean softres = getprop("haven.softres", "on").equals("on");
     public static byte[] authck = null;
     public static String prefspec = "hafen";
+    public static boolean Boost = false;   
+    public static boolean Sound = true;
+    static double DrawingDistance=501;
     
     static {
 	String p;
 	if((p = getprop("haven.authck", null)) != null)
 	    authck = Utils.hex2byte(p);
+
     }
+     public static void GetProperties()
+     {
+                 	Properties prop = new Properties();
+	InputStream output = null;
+        	try {
+
+            output = new FileInputStream("config.properties");
+                prop.load(output);
+		
+                
+		if(prop.getProperty("Boost")!=null)
+		Boost="y".equals(prop.getProperty("Boost"));
+		if(prop.getProperty("sound")!=null)
+		Sound="y".equals(prop.getProperty("sound"));
+		if(prop.getProperty("DrawingDistance")!=null)
+                DrawingDistance=Double.parseDouble(prop.getProperty("DrawingDistance"));
+
+		// save properties to project root folder
+
+	} catch (IOException io) {
+		io.printStackTrace();
+	} finally {
+		if (output != null) {
+			try {
+				output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+     }
+    public static void SetProperties()
+    {
+                	Properties prop = new Properties();
+	OutputStream output = null;
+        	try {
+
+            output = new FileOutputStream("config.properties");
+
+		// set the properties value
+		prop.setProperty("Boost", (Boost)?"y":"n");
+		prop.setProperty("sound", (Sound)?"y":"n");
+		prop.setProperty("DrawingDistance", String.valueOf(DrawingDistance));
+
+		// save properties to project root folder
+                prop.store(output, null);
+	} catch (IOException io) {
+		io.printStackTrace();
+	} finally {
+		if (output != null) {
+			try {
+				output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+    }
+    
+    
     
     private static int getint(String name, int def) {
 	String val = getprop(name, null);
@@ -137,6 +210,7 @@ public class Config {
 		authck = Utils.hex2byte(opt.arg);
 		break;
 	    }
+            
 	}
 	if(opt.rest.length > 0) {
 	    int p = opt.rest[0].indexOf(':');

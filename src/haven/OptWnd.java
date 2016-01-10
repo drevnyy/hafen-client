@@ -26,9 +26,6 @@
 
 package haven;
 
-import java.util.*;
-import java.awt.font.TextAttribute;
-
 public class OptWnd extends Window {
     public final Panel main, video, audio;
     public Panel current;
@@ -101,7 +98,7 @@ public class OptWnd extends Window {
 			    cf.dirty = true;
 			}
 		    }, new Coord(0, y));
-		y += 25;
+		y += 20;
 		add(new CheckBox("Render shadows") {
 			{a = cf.lshadow.val;}
 
@@ -120,7 +117,7 @@ public class OptWnd extends Window {
 			    cf.dirty = true;
 			}
 		    }, new Coord(0, y));
-		y += 25;
+		y += 20;
 		add(new CheckBox("Antialiasing") {
 			{a = cf.fsaa.val;}
 
@@ -135,7 +132,21 @@ public class OptWnd extends Window {
 			    cf.dirty = true;
 			}
 		    }, new Coord(0, y));
-		y += 25;
+                y += 20;
+		add(new CheckBox("Boost mode") {
+			{a = Config.Boost;}
+
+			public void set(boolean val) {
+			    try {
+				Config.Boost=(val);
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                y += 30;
 		add(new Label("Anisotropic filtering"), new Coord(0, y));
 		if(cf.anisotex.max() <= 1) {
 		    add(new Label("(Not supported)"), new Coord(15, y + 15));
@@ -164,6 +175,34 @@ public class OptWnd extends Window {
 			    }
 			}, new Coord(0, y + 15));
 		}
+		y += 30;
+                add(new Label("objs draw range"), new Coord(0, y));
+
+		    final Label dpy = add(new Label(""), new Coord(165, y + 15));
+		    add(new HSlider(160, (int)(1), (int)(501), (int)(Config.DrawingDistance)) {
+			    protected void added() {
+				dpy();
+				this.c.y = dpy.c.y + ((dpy.sz.y - this.sz.y) / 2);
+			    }
+			    void dpy() {
+				if(val < 2)
+				    dpy.settext("min");
+                                if(val > 499)
+				    dpy.settext("max");
+				else
+				    dpy.settext(String.valueOf(val));
+			    }
+			    public void changed() {
+				try {
+				    Config.DrawingDistance=val;
+				} catch(GLSettings.SettingException e) {
+				    getparent(GameUI.class).error(e.getMessage());
+				    return;
+				}
+				dpy();
+				cf.dirty = true;
+			    }
+			}, new Coord(0, y + 15));
 		y += 35;
 		add(new Button(200, "Reset to defaults") {
 			public void click() {
@@ -210,6 +249,7 @@ public class OptWnd extends Window {
 	}
 	main.add(new Button(200, "Close") {
 		public void click() {
+                    Config.SetProperties();
 		    OptWnd.this.hide();
 		}
 	    }, new Coord(0, 180));
@@ -248,6 +288,20 @@ public class OptWnd extends Window {
 		}
 	    }, new Coord(0, y));
 	y += 35;
+        audio.add(new CheckBox("Sound") {
+			{a = Config.Sound;}
+
+			public void set(boolean val) {
+			    try {
+				Config.Sound=(val);
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+        y += 25;
 	audio.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	audio.pack();
 

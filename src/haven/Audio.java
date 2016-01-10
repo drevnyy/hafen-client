@@ -449,6 +449,7 @@ public class Audio {
 	    SourceDataLine line = null;
 	    try {
 		while(true) {
+                if(Config.Sound){
 		    try {
 			line = (SourceDataLine)AudioSystem.getLine(new DataLine.Info(SourceDataLine.class, fmt));
 			line.open(fmt, bufsize);
@@ -462,7 +463,7 @@ public class Audio {
 			this.notifyAll();
 		    }
 		    byte[] buf = new byte[bufsize / 2];
-		    while(true) {
+		    while(Config.Sound) {
 			if(Thread.interrupted())
 			    throw(new InterruptedException());
 			synchronized(queuemon) {
@@ -481,8 +482,14 @@ public class Audio {
 			    break;
 		    }
 		    line.close();
-		    line = null;
+		    line = null;                
+                }
+                else
+                {
+                    Thread.sleep(1000);
+                }
 		}
+
 	    } catch(InterruptedException e) {
 	    } finally {
 		synchronized(Audio.class) {

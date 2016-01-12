@@ -61,14 +61,19 @@ public class TerrainTile extends Tiler implements Tiler.MCons, Tiler.CTrans {
 	    vs = new Scan(Coord.z.sub(sr, sr), m.sz.add(sr * 2 + 1, sr * 2 + 1));
 	    float[][] buf1 = new float[var.length + 1][vs.l];
 	    float[][] lwc = new float[var.length + 1][vs.l];
-	    for(int i = 0; i < var.length + 1; i++) {
+	    if(!Config.UglyTiles)
+            {
+            for(int i = 0; i < var.length + 1; i++) {
 		for(int y = vs.ul.y; y < vs.br.y; y++) {
 		    for(int x = vs.ul.x; x < vs.br.x; x++) {
 			lwc[i][vs.o(x, y)] = (float)noise.getr(0.5, 1.5, 32, x + m.ul.x, y + m.ul.y, i * 23);
 		    }
 		}
 	    }
+            }
 	    setbase(buf1);
+       if(!Config.UglyTiles)
+       {
 	    for(int i = 0; i < sr; i++) {
 		float[][] buf2 = new float[var.length + 1][vs.l];
 		for(int y = vs.ul.y; y < vs.br.y; y++) {
@@ -103,7 +108,10 @@ public class TerrainTile extends Tiler implements Tiler.MCons, Tiler.CTrans {
 		}
 		buf1 = buf2;
 	    }
+        }
 	    bv = buf1;
+            if(!Config.UglyTiles)
+            {
 	    for(int y = vs.ul.y; y < vs.br.y; y++) {
 		for(int x = vs.ul.x; x < vs.br.x; x++) {
 		    for(int i = 0; i < var.length + 1; i++) {
@@ -119,25 +127,31 @@ public class TerrainTile extends Tiler implements Tiler.MCons, Tiler.CTrans {
 		    }
 		}
 	    }
+        }
 	    es = new Scan(Coord.z, m.sz);
 	    en = new boolean[var.length + 1][es.l];
 	    for(int y = es.ul.y; y < es.br.y; y++) {
 		for(int x = es.ul.x; x < es.br.x; x++) {
 		    boolean fall = false;
-		    for(int i = var.length; i >= 0; i--) {
-			if(fall) {
-			    en[i][es.o(x, y)] = false;
-			} else if((bv[i][vs.o(x    , y    )] < 0.001f) && (bv[i][vs.o(x + 1, y    )] < 0.001f) &&
-				  (bv[i][vs.o(x    , y + 1)] < 0.001f) && (bv[i][vs.o(x + 1, y + 1)] < 0.001f)) {
-			    en[i][es.o(x, y)] = false;
-			} else {
-			    en[i][es.o(x, y)] = true;
-			    if((bv[i][vs.o(x    , y    )] > 0.99f) && (bv[i][vs.o(x + 1, y    )] > 0.99f) &&
-			       (bv[i][vs.o(x    , y + 1)] > 0.99f) && (bv[i][vs.o(x + 1, y + 1)] > 0.99f)) {
-				fall = true;
-			    }
-			}
-		    }
+                    for(int i = var.length; i >= 0; i--) {
+                        if(!Config.UglyTiles)
+                        {
+                            if(fall) {
+                                en[i][es.o(x, y)] = false;
+                            } else if((bv[i][vs.o(x    , y    )] < 0.001f) && (bv[i][vs.o(x + 1, y    )] < 0.001f) &&
+                                      (bv[i][vs.o(x    , y + 1)] < 0.001f) && (bv[i][vs.o(x + 1, y + 1)] < 0.001f)) {
+                                en[i][es.o(x, y)] = false;
+                            } else {
+                                en[i][es.o(x, y)] = true;
+                                if((bv[i][vs.o(x    , y    )] > 0.99f) && (bv[i][vs.o(x + 1, y    )] > 0.99f) &&
+                                   (bv[i][vs.o(x    , y + 1)] > 0.99f) && (bv[i][vs.o(x + 1, y + 1)] > 0.99f)) {
+                                    fall = true;
+                                }
+                            }
+                        }
+                        else
+                            en[i][es.o(x, y)] = true;
+                    }
 		}
 	    }
 	}

@@ -449,7 +449,7 @@ public class Audio {
 	    SourceDataLine line = null;
 	    try {
 		while(true) {
-                if(Config.Sound){
+                //if(Config.Sound){
 		    try {
 			line = (SourceDataLine)AudioSystem.getLine(new DataLine.Info(SourceDataLine.class, fmt));
 			line.open(fmt, bufsize);
@@ -463,7 +463,7 @@ public class Audio {
 			this.notifyAll();
 		    }
 		    byte[] buf = new byte[bufsize / 2];
-		    while(Config.Sound) {
+		    while(true) {
 			if(Thread.interrupted())
 			    throw(new InterruptedException());
 			synchronized(queuemon) {
@@ -483,11 +483,13 @@ public class Audio {
 		    }
 		    line.close();
 		    line = null;                
-                }
-                else
-                {
-                    Thread.sleep(1000);
-                }
+                //}
+                //else
+               // {            
+
+		//    line = null;  
+              //      Thread.sleep(1000);
+             //   }
 		}
 
 	    } catch(InterruptedException e) {
@@ -532,6 +534,8 @@ public class Audio {
     }
     
     public static void play(CS clip) {
+        if(!Config.Sound)
+            return;
 	if(clip == null)
 	    throw(new NullPointerException());
 	Player pl = ckpl(true);
@@ -546,7 +550,9 @@ public class Audio {
     }
     
     public static void queue(Runnable d) {
-	Player pl = ckpl(true);
+	if(!Config.Sound)
+            return;
+        Player pl = ckpl(true);
 	synchronized(pl.queuemon) {
 	    pl.queue.add(d);
 	}

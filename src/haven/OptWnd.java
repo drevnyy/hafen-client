@@ -27,7 +27,7 @@
 package haven;
 
 public class OptWnd extends Window {
-    public final Panel main, video, audio;
+    public final Panel main, video, audio, Boost;
     public Panel current;
 
     public void chpanel(Panel p) {
@@ -133,20 +133,6 @@ public class OptWnd extends Window {
 			}
 		    }, new Coord(0, y));
                 y += 20;
-		add(new CheckBox("Boost mode") {
-			{a = Config.Boost;}
-
-			public void set(boolean val) {
-			    try {
-				Config.Boost=(val);
-			    } catch(GLSettings.SettingException e) {
-				getparent(GameUI.class).error(e.getMessage());
-				return;
-			    }
-			    a = val;
-			}
-		    }, new Coord(0, y));
-                y += 30;
 		add(new Label("Anisotropic filtering"), new Coord(0, y));
 		if(cf.anisotex.max() <= 1) {
 		    add(new Label("(Not supported)"), new Coord(15, y + 15));
@@ -175,34 +161,6 @@ public class OptWnd extends Window {
 			    }
 			}, new Coord(0, y + 15));
 		}
-		y += 30;
-                add(new Label("objs draw range"), new Coord(0, y));
-
-		    final Label dpy = add(new Label(""), new Coord(165, y + 15));
-		    add(new HSlider(160, (int)(1), (int)(501), (int)(Config.DrawingDistance)) {
-			    protected void added() {
-				dpy();
-				this.c.y = dpy.c.y + ((dpy.sz.y - this.sz.y) / 2);
-			    }
-			    void dpy() {
-				if(val < 2)
-				    dpy.settext("min");
-                                if(val > 499)
-				    dpy.settext("max");
-				else
-				    dpy.settext(String.valueOf(val));
-			    }
-			    public void changed() {
-				try {
-				    Config.DrawingDistance=val;
-				} catch(GLSettings.SettingException e) {
-				    getparent(GameUI.class).error(e.getMessage());
-				    return;
-				}
-				dpy();
-				cf.dirty = true;
-			    }
-			}, new Coord(0, y + 15));
 		y += 35;
 		add(new Button(200, "Reset to defaults") {
 			public void click() {
@@ -231,10 +189,12 @@ public class OptWnd extends Window {
 	main = add(new Panel());
 	video = add(new VideoPanel(main));
 	audio = add(new Panel());
+        Boost = add(new Panel());
 	int y;
 
 	main.add(new PButton(200, "Video settings", 'v', video), new Coord(0, 0));
 	main.add(new PButton(200, "Audio settings", 'a', audio), new Coord(0, 30));
+        main.add(new PButton(200, "Boost settings", 'b', Boost), new Coord(0,60));
 	if(gopts) {
 	    main.add(new Button(200, "Switch character") {
 		    public void click() {
@@ -304,7 +264,111 @@ public class OptWnd extends Window {
         y += 25;
 	audio.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
 	audio.pack();
+        y=0;
+        Boost.add(new CheckBox("Boost mode") {
+			{a = Config.Boost;}
 
+			public void set(boolean val) {
+			    try {
+				Config.Boost=(val);
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                y += 20;
+        
+                Boost.add(new CheckBox("Ugly Tiles") {
+			{a = Config.UglyTiles;}
+
+			public void set(boolean val) {
+			    try {
+                                Config.UglyTiles=val;
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                y += 20;
+                Boost.add(new CheckBox("Simple Crops (may require reboot)") {
+			{a = Config.enableSimpleCrops;}
+
+			public void set(boolean val) {
+			    try {
+                                Config.enableSimpleCrops=val;
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                                y += 30;
+                Boost.add(new CheckBox("Hide Crops") {
+			{a = Config.hideCrops;}
+
+			public void set(boolean val) {
+			    try {
+                                Config.hideCrops=val;
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                                y += 20;
+                Boost.add(new CheckBox("Hide trees") {
+			{a = Config.hideTrees;}
+
+			public void set(boolean val) {
+			    try {
+                                Config.hideTrees=val;
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                                                y += 20;
+                Boost.add(new CheckBox("Hide animals") {
+			{a = Config.hideKritters;}
+
+			public void set(boolean val) {
+			    try {
+                                Config.hideKritters=val;
+			    } catch(GLSettings.SettingException e) {
+				getparent(GameUI.class).error(e.getMessage());
+				return;
+			    }
+			    a = val;
+			}
+		    }, new Coord(0, y));
+                		y += 30;
+                Boost.add(new Label("Objects draw range"), new Coord(0, y));
+
+		    final Label dpy = add(new Label(""), new Coord(165, y + 15));
+		    Boost.add(new HSlider(160, (int)(1), (int)(501), (int)(Config.DrawingDistance)) {
+			    protected void added() {
+				this.c.y = dpy.c.y + ((dpy.sz.y - this.sz.y) / 2);
+			    }
+			    public void changed() {
+				try {
+				    Config.DrawingDistance=val;
+				} catch(GLSettings.SettingException e) {
+				    getparent(GameUI.class).error(e.getMessage());
+				    return;
+				}
+				
+			    }
+			}, new Coord(0, y + 15));
+        Boost.add(new PButton(200, "Back", 27, main), new Coord(0, 180));
+	Boost.pack();
 	chpanel(main);
     }
 

@@ -584,6 +584,16 @@ public class MapView extends PView implements DTarget, Console.Directory {
                 Coord me=getPlayerCoord();
 		synchronized(glob.oc) {
 		    for(Gob gob : glob.oc){//list of objects to draw
+                        if(Config.hideCrops || Config.hideKritters || Config.hideTrees)
+                        {
+                        String name = gob.resname();
+                        if(Config.hideCrops && name.startsWith("gfx/terobjs/plants/"))
+                            continue;
+                        if(Config.hideKritters && name.startsWith("gfx/kritter/")) // human is borka
+                            continue;
+                        if(Config.hideTrees && name.startsWith("gfx/terobjs/trees"))
+                            continue;
+                        }
                         if(GobInRange(gob,me ))
                             addgob(rl, gob);
                     }

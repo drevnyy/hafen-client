@@ -40,7 +40,14 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
     Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
     public Collection<Overlay> ols = new LinkedList<Overlay>();
 
-
+    public String resname() {
+	Resource res = getres();
+	String name = "";
+	if(res != null) {
+	    name = res.name;
+	}
+	return name;
+    }
 	
     public static class Overlay implements Rendered {
 	public Indir<Resource> res;

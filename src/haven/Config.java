@@ -60,6 +60,11 @@ public class Config {
     public static boolean Boost = false;   
     public static boolean Sound = true;
     static double DrawingDistance=501;
+    public static boolean enableSimpleCrops=true;
+    public static boolean UglyTiles=false;
+    static boolean hideKritters;
+    public static boolean hideCrops;
+    static boolean hideTrees;
     
     static {
 	String p;
@@ -81,6 +86,16 @@ public class Config {
 		Boost="y".equals(prop.getProperty("Boost"));
 		if(prop.getProperty("sound")!=null)
 		Sound="y".equals(prop.getProperty("sound"));
+                if(prop.getProperty("enableSimpleCrops")!=null)
+		enableSimpleCrops="y".equals(prop.getProperty("enableSimpleCrops"));
+                if(prop.getProperty("UglyTiles")!=null)
+		UglyTiles="y".equals(prop.getProperty("UglyTiles"));
+                if(prop.getProperty("hideKritters")!=null)
+		hideKritters="y".equals(prop.getProperty("hideKritters"));                
+                if(prop.getProperty("hideTrees")!=null)
+		hideTrees="y".equals(prop.getProperty("hideTrees"));
+                if(prop.getProperty("hideCrops")!=null)
+		hideCrops="y".equals(prop.getProperty("hideCrops"));
 		if(prop.getProperty("DrawingDistance")!=null)
                 DrawingDistance=Double.parseDouble(prop.getProperty("DrawingDistance"));
 
@@ -110,6 +125,11 @@ public class Config {
 		// set the properties value
 		prop.setProperty("Boost", (Boost)?"y":"n");
 		prop.setProperty("sound", (Sound)?"y":"n");
+		prop.setProperty("enableSimpleCrops", (enableSimpleCrops)?"y":"n");
+		prop.setProperty("UglyTiles", (UglyTiles)?"y":"n");
+		prop.setProperty("hideKritters", (hideKritters)?"y":"n");
+		prop.setProperty("hideCrops", (hideCrops)?"y":"n");
+		prop.setProperty("hideTrees", (hideTrees)?"y":"n");
 		prop.setProperty("DrawingDistance", String.valueOf(DrawingDistance));
 
 		// save properties to project root folder

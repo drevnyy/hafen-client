@@ -1010,10 +1010,8 @@ public class MapView extends PView implements DTarget, Console.Directory {
     }
     private static int fps=10000;
     private Loading camload = null, lastload = null;
-    private static long time2=0;
+    
     public void draw(GOut g) {
-                    fps=1000/(int)((System.nanoTime()-time2)/1000000);
-                time2=System.nanoTime();
 	glob.map.sendreqs();
 	if((olftimer != 0) && (olftimer < System.currentTimeMillis()))
 	    unflashol();

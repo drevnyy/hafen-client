@@ -7,7 +7,6 @@ package haven.res.lib.layspr;
 
 import haven.Coord;
 import haven.GOut;
-import haven.res.lib.layspr.Layer;
 
 class Image extends Layer {
     final haven.Resource.Image img;

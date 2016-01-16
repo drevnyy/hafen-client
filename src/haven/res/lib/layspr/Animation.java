@@ -8,7 +8,6 @@ package haven.res.lib.layspr;
 import haven.Coord;
 import haven.GOut;
 import haven.Resource.Anim;
-import haven.res.lib.layspr.Layer;
 
 class Animation extends Layer {
     Anim a;
